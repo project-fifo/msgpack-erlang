@@ -73,10 +73,7 @@ pack_(Term, [jiffy])->
     msgpack_jiffy:pack(Term);
 
 pack_(Term, [jsx])->
-    msgpack_jsx:pack(Term);
-
-pack_(Term, [nif])->
-    msgpack_nif:pack(Term).
+    msgpack_jsx:pack(Term).
 
 %% @doc Decode an msgpack binary into an erlang term.
 %%      It only decodes the first msgpack packet contained in the binary; the rest is returned as is.
@@ -105,9 +102,6 @@ unpack_stream_(Bin, [jiffy]) when is_binary(Bin) ->
 
 unpack_stream_(Bin, [jsx]) when is_binary(Bin) ->
     msgpack_jsx:unpack(Bin);
-
-unpack_stream_(Bin, [nif]) when is_binary(Bin) ->
-    msgpack_nif:unpack(Bin);
 
 unpack_stream_(Other, _Opts) ->
     {error, {badarg, Other}}.
@@ -156,12 +150,7 @@ basic_test()->
                         {ok, Term} = msgpack:unpack(msgpack:pack(Term)),
                         Term
                 end,
-    MatchFun1 = fun(Term) ->
-                        {ok, Term} = msgpack_nif:unpack(msgpack_nif:pack(Term)),
-                        Term
-                end,
-    Tests = lists:map(MatchFun0, Tests),
-    Tests = lists:map(MatchFun1, Tests).
+    Tests = lists:map(MatchFun0, Tests).
 
 test_p(Len,Term,OrigBin,Len) ->
     {ok, Term}=msgpack:unpack(OrigBin);
